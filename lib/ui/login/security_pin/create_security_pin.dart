@@ -1,6 +1,7 @@
 
 import 'package:YOURDRS_FlutterAPP/common/app_colors.dart';
 import 'package:YOURDRS_FlutterAPP/common/app_strings.dart';
+import 'package:YOURDRS_FlutterAPP/ui/login/loginscreen.dart';
 import 'package:YOURDRS_FlutterAPP/ui/login/security_pin/DemoScreen.dart';
 import 'package:YOURDRS_FlutterAPP/ui/login/security_pin/biometrics/local_auth_service.dart';
 import 'package:YOURDRS_FlutterAPP/ui/login/security_pin/biometrics/service_locator.dart';
@@ -43,7 +44,7 @@ class PinPutViewState extends State<PinPutView> {
   Widget build(BuildContext context) {
 
     var StorePin;
-    var MemberId=int.parse(widget.data1);
+     var MemberId=int.parse(widget.data1);
     // TODO: implement build
     final BoxDecoration pinPutDecoration = BoxDecoration(
       color: Colors.white,
@@ -132,7 +133,7 @@ class PinPutViewState extends State<PinPutView> {
                         onSubmit: (String pin) {
                           //StorePin = pin;
                           print('Saved Value is $pin');
-                          Navigator.push(
+                          Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(                                   ///here we are sending our Member id and Pin to confirmation Screen.
                                   builder: (context) => ConfirmPinScreen(
@@ -290,6 +291,7 @@ class PinPutViewState extends State<PinPutView> {
                               MaterialPageRoute(
                                   builder: (context) => ConfirmPinScreen(
                                     data1: StorePin,
+                                    data2: widget.data1,
                                   )));
                         },
                         submittedFieldDecoration: pinPutDecoration,
@@ -318,6 +320,7 @@ class PinPutViewState extends State<PinPutView> {
                           fontSize: 20,
                           decoration: TextDecoration.underline),
                     ),
+                    onTap:()=> Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>LoginScreen())),
                   ),
                 ),
                 SizedBox(

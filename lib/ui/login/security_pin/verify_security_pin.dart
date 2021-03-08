@@ -1,9 +1,9 @@
-
 import 'package:YOURDRS_FlutterAPP/blocs/pin_screen_validate_bloc/pin_screen_validate_bloc.dart';
 import 'package:YOURDRS_FlutterAPP/common/app_colors.dart';
 import 'package:YOURDRS_FlutterAPP/common/app_strings.dart';
 import 'package:YOURDRS_FlutterAPP/data/repo/local/preference/local_storage.dart';
 import 'package:YOURDRS_FlutterAPP/data/service/pin_validate_api.dart';
+import 'package:YOURDRS_FlutterAPP/ui/login/loginscreen.dart';
 import 'package:YOURDRS_FlutterAPP/ui/login/security_pin/DemoScreen.dart';
 import 'package:YOURDRS_FlutterAPP/ui/login/security_pin/biometrics/local_auth_service.dart';
 import 'package:YOURDRS_FlutterAPP/ui/login/security_pin/biometrics/service_locator.dart';
@@ -12,8 +12,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
-class VerifyPinScreen extends StatelessWidget {
 
+class VerifyPinScreen extends StatelessWidget {
   VerifyPinScreen({
     Key key,
     this.data1,
@@ -23,14 +23,14 @@ class VerifyPinScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<PinScreenBloc>(
-      create:(context)=>PinScreenBloc(PinRepo()),
+      create: (context) => PinScreenBloc(PinRepo()),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-       // navigatorKey: navigatorKey,
+        // navigatorKey: navigatorKey,
         home: Scaffold(
             body: PinPutView(
-              data: data1,
-            )),
+          data: data1,
+        )),
       ),
     );
   }
@@ -46,6 +46,7 @@ class PinPutView extends StatefulWidget {
 
 class PinPutViewState extends State<PinPutView> {
   final _formKey = GlobalKey<FormState>();
+bool visible=false;
   //final LocalAuthenticationService _localAuth = locator<LocalAuthenticationService>();
 
   @override
@@ -76,12 +77,10 @@ class PinPutViewState extends State<PinPutView> {
       content: Container(
         height: 80.0,
         child: Center(
-
           child: Text(
             AppStrings.wrongPin,
             style: const TextStyle(fontSize: 25.0),
           ),
-
         ),
       ),
       backgroundColor: Colors.redAccent,
@@ -97,52 +96,61 @@ class PinPutViewState extends State<PinPutView> {
       barrierDismissible: false,
       //this means the user must tap a button to exit the Alert Dialog
       builder: (BuildContext context) {
-        return
-          AlertDialog(
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 100,height: 90,
-                  child: Image.asset('assets/images/finger.png',fit: BoxFit.cover,),
-                ),
-              ],
-            ),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Touch Id for YourDrs',style: TextStyle(fontWeight: FontWeight.w400),),
-                        SizedBox(height: 20,),
-                        Text('Touch/Face ID Authentication'),]),
-
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              new Container(
-                margin: const EdgeInsets.only(left: 20.0, right: 10.0),
-                child: Divider(
-                  thickness: 1,
-                  color: Colors.black,
-                  height: 40,
-                ),),
+        return AlertDialog(
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
               Container(
-                width: 400,
-                height: 20,
-                // color: Colors.yellowAccent,
-                alignment: Alignment.center,
-                child:RaisedButton(
-                  color: Colors.white,
-                  child: Text('Cancel'),
-                  elevation: 0,
-                  onPressed: (){Navigator.of(context).pop(); },
+                width: 100,
+                height: 90,
+                child: Image.asset(
+                  'assets/images/finger.png',
+                  fit: BoxFit.cover,
                 ),
               ),
             ],
-          );
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Text(
+                    'Touch Id for YourDrs',
+                    style: TextStyle(fontWeight: FontWeight.w400),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text('Touch/Face ID Authentication'),
+                ]),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            new Container(
+              margin: const EdgeInsets.only(left: 20.0, right: 10.0),
+              child: Divider(
+                thickness: 1,
+                color: Colors.black,
+                height: 40,
+              ),
+            ),
+            Container(
+              width: 400,
+              height: 20,
+              // color: Colors.yellowAccent,
+              alignment: Alignment.center,
+              child: RaisedButton(
+                color: Colors.white,
+                child: Text('Cancel'),
+                elevation: 0,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          ],
+        );
       },
     );
   }
@@ -154,23 +162,30 @@ class PinPutViewState extends State<PinPutView> {
       color: Colors.white,
       borderRadius: BorderRadius.circular(12.0),
     );
-
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
     return Container(
       color: CustomizedColors.PinScreenColor,
-      child: BlocListener<PinScreenBloc,PinScreenState>(
-        listener: (context,state){
+      child: BlocListener<PinScreenBloc, PinScreenState>(
+        listener: (context, state) {
           // if(state.Loading==true){
           //   return Center(child: CircularProgressIndicator());
           //
           // }
-          if(state.isTrue==true){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Welcome(data1: state.name,)));
-          }
-          else
+          if (state.isTrue == true) {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Welcome(
+                          data1: state.name,
+                        )));
+          } else {
             _showSnackBar();
+            setState(() {
+              visible=false;
+            });
+          }
         },
         child: Container(
           height: height,
@@ -181,7 +196,7 @@ class PinPutViewState extends State<PinPutView> {
             children: <Widget>[
               Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-
+                  Visibility(visible: false,child: Center(child: CircularProgressIndicator())),
                   Container(
                     //color: Colors.yellowAccent,
                     child: Text(
@@ -226,8 +241,8 @@ class PinPutViewState extends State<PinPutView> {
                   width: width * 0.65,
                   // color: Colors.deepPurpleAccent,
                   child:
-                  // EnterInputFields(data2: widget.data,),
-                  Form(
+                      // EnterInputFields(data2: widget.data,),
+                      Form(
                     key: _formKey,
                     child: GestureDetector(
                       onLongPress: () {
@@ -249,10 +264,17 @@ class PinPutViewState extends State<PinPutView> {
                         eachFieldHeight: 25.0,
                         onSubmit: (String pin) {
                           var Verify;
+                          setState(() {
+                            visible=true;
+                          });
                           // var MemberID =memberIdFunction();
                           print("Verify Screen received id is ${widget.data}");
                           // print("Verify Screen received id is $MemberID");
-                          BlocProvider.of<PinScreenBloc>(context).add(PinScreenEvent(pin, Verify,));
+                          BlocProvider.of<PinScreenBloc>(context)
+                              .add(PinScreenEvent(
+                            pin,
+                            Verify,
+                          ));
                         },
                         submittedFieldDecoration: pinPutDecoration,
                         selectedFieldDecoration: pinPutDecoration.copyWith(
@@ -276,7 +298,10 @@ class PinPutViewState extends State<PinPutView> {
                     onTap: _showMyDialog,
                     child: Text(
                       AppStrings.loginWithDiffAcc,
-                      style: TextStyle(color: Colors.white, fontSize: 20,decoration: TextDecoration.underline),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          decoration: TextDecoration.underline),
                     ),
                   ),
                 ),
@@ -291,6 +316,17 @@ class PinPutViewState extends State<PinPutView> {
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
                   ),
+                ),
+                SizedBox(height: 25,),
+                Visibility(
+                    maintainSize: true,
+                    maintainAnimation: true,
+                    maintainState: true,
+                    visible: visible,
+                    child: Container(
+                        margin: EdgeInsets.only(top: 20, bottom: 0),
+                        child: CircularProgressIndicator()
+                    )
                 ),
               ]),
               //_bottomAppBar,
@@ -312,145 +348,169 @@ class PinPutViewState extends State<PinPutView> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
-    return Container(
-      color: CustomizedColors.PinScreenColor,
-      child: BlocListener<PinScreenBloc,PinScreenState>(
-        listener: (context,state){
-          // if(state.Loading==true){
-          //   return Center(child: CircularProgressIndicator());
-          //
-          // }
-          if(state.isTrue==true){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Welcome(data1: state.name,)));
-          }
-          else
-            _showSnackBar();
-        },
-        child: Container(
-          // width: width,
+    return ListView(
+      children: [
+        Container(
+          height: MediaQuery.of(context).size.height,
+        color: CustomizedColors.PinScreenColor,
+        child: BlocListener<PinScreenBloc, PinScreenState>(
+          listener: (context, state) {
+            // if(state.Loading==true){
+            //   return Center(child: CircularProgressIndicator());
+            //
+            // }
+            if (state.isTrue == true) {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Welcome(
+                        data1: state.name,
+                      )));
+            } else {
+              _showSnackBar();
+              setState(() {
+                visible=false;
+              });
+            }
+          },
+          child: Container(
+            // width: width,
 
-          child: Stack(
-            fit: StackFit.passthrough,
-            children: <Widget>[
-              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-
+            child: Stack(
+              fit: StackFit.passthrough,
+              children: <Widget>[
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Container(
+                      //color: Colors.yellowAccent,
+                      child: Text(
+                        AppStrings.yourDrs,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 50,
+                            letterSpacing: 2,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Container(
+                      height: 70,
+                      child: Image.asset(AppStrings.doctorImg),
+                    )
+                  ]),
+                  SizedBox(
+                    height: height * 0.05,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 0, bottom: 0),
+                    child: Container(
+                        height: height * 0.13,
+                        //width: width*0.25,
+                        child: Image.asset(AppStrings.pinImage)),
+                  ),
+                  SizedBox(
+                    height: height * 0.03,
+                  ),
                   Container(
-                    //color: Colors.yellowAccent,
                     child: Text(
-                      AppStrings.yourDrs,
+                      AppStrings.enterPin,
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 50,
-                          letterSpacing: 2,
-                          fontWeight: FontWeight.bold),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
                     ),
                   ),
+                  SizedBox(height: height * 0.05),
                   Container(
-                    height: 70,
-                    child: Image.asset(AppStrings.doctorImg),
-                  )
-                ]),
-                SizedBox(
-                  height: height * 0.05,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 0, bottom: 0),
-                  child: Container(
-                      height: height * 0.13,
-                      //width: width*0.25,
-                      child: Image.asset(AppStrings.pinImage)),
-                ),
-                SizedBox(
-                  height: height * 0.03,
-                ),
-                Container(
-                  child: Text(
-                    AppStrings.enterPin,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ),
-                SizedBox(height: height * 0.05),
-                Container(
-                  height: height * 0.06,
-                  width: width * 0.65,
-                  // color: Colors.deepPurpleAccent,
-                  child:
-                  // EnterInputFields(data2: widget.data,),
-                  Form(
-                    key: _formKey,
-                    child: GestureDetector(
-                      onLongPress: () {
-                        print(_formKey.currentState.validate());
-                      },
-                      child: PinPut(
-                        validator: (s) {
-                          if (s.contains('1')) return null;
-                          return '';
+                    height: height * 0.16,
+                    width: width * 0.65,
+                    // color: Colors.deepPurpleAccent,
+                    child:
+                        // EnterInputFields(data2: widget.data,),
+                        Form(
+                      key: _formKey,
+                      child: GestureDetector(
+                        onLongPress: () {
+                          print(_formKey.currentState.validate());
                         },
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        withCursor: true,
-                        fieldsCount: 4,
-                        fieldsAlignment: MainAxisAlignment.spaceAround,
-                        textStyle: const TextStyle(
-                            fontSize: 25.0, color: Colors.black),
-                        eachFieldMargin: EdgeInsets.all(0),
-                        eachFieldWidth: 20.0,
-                        eachFieldHeight: 25.0,
-                        onSubmit: (String pin) {
-                          var Verify;
-                          // var MemberID =memberIdFunction();
-                          print("Verify Screen received id is ${widget.data}");
-                          // print("Verify Screen received id is $MemberID");
-                          BlocProvider.of<PinScreenBloc>(context).add(PinScreenEvent(pin, Verify,));
-                        },
-                        submittedFieldDecoration: pinPutDecoration,
-                        selectedFieldDecoration: pinPutDecoration.copyWith(
-                          color: Colors.white,
-                          border: Border.all(
-                            width: 2,
-                            color: const Color.fromRGBO(160, 215, 220, 1),
+                        child: PinPut(
+                          validator: (s) {
+                            if (s.contains('1')) return null;
+                            return '';
+                          },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          withCursor: true,
+                          fieldsCount: 4,
+                          fieldsAlignment: MainAxisAlignment.spaceAround,
+                          textStyle: const TextStyle(
+                              fontSize: 25.0, color: Colors.black),
+                          eachFieldMargin: EdgeInsets.all(0),
+                          eachFieldWidth: 20.0,
+                          eachFieldHeight: 25.0,
+                          onSubmit: (String pin) {
+                            setState(() {
+
+                            });
+                            var Verify;
+                            // var MemberID =memberIdFunction();
+                            print("Verify Screen received id is ${widget.data}");
+                            // print("Verify Screen received id is $MemberID");
+                            BlocProvider.of<PinScreenBloc>(context)
+                                .add(PinScreenEvent(
+                              pin,
+                              Verify,
+                            ));
+                          },
+                          submittedFieldDecoration: pinPutDecoration,
+                          selectedFieldDecoration: pinPutDecoration.copyWith(
+                            color: Colors.white,
+                            border: Border.all(
+                              width: 2,
+                              color: const Color.fromRGBO(160, 215, 220, 1),
+                            ),
                           ),
+                          followingFieldDecoration: pinPutDecoration,
+                          pinAnimationType: PinAnimationType.scale,
                         ),
-                        followingFieldDecoration: pinPutDecoration,
-                        pinAnimationType: PinAnimationType.scale,
                       ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: height * 0.10,
-                ),
-                Container(
-                  child: GestureDetector(
-                    onTap: _showMyDialog,
-                    child: Text(
-                      AppStrings.loginWithDiffAcc,
-                      style: TextStyle(color: Colors.white, fontSize: 20,decoration: TextDecoration.underline),
+
+                  // SizedBox(
+                  //   height: height * 0.10,
+                  // ),
+                  Container(
+                    child: GestureDetector(
+                      onTap:()=> Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>LoginScreen())),
+                      child: Text(
+                        AppStrings.loginWithDiffAcc,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            decoration: TextDecoration.underline),
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: height * 0.02,
-                ),
-                Container(
-                  child: GestureDetector(
-                    // onTap: _localAuth.authenticate,
-                    child: Text(
-                      AppStrings.userTouchAndFaceId,
-                      style: TextStyle(color: Colors.white, fontSize: 20),
+                  SizedBox(
+                    height: height * 0.02,
+                  ),
+                  Container(
+                    child: GestureDetector(
+                       onTap: _showMyDialog,
+                      child: Text(
+                        AppStrings.userTouchAndFaceId,
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
                     ),
                   ),
-                ),
-              ]),
-              //_bottomAppBar,
-            ],
+
+                ]),
+                //_bottomAppBar,
+              ],
+            ),
           ),
         ),
       ),
+      ]
     );
   }
 }

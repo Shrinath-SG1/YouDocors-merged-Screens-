@@ -7,4 +7,4 @@ class PinGenerateScreenEvent {
 
 
   PinGenerateScreenEvent(this.pin,this.generate,this.memberId);
-}
+}///this is event class for pin generation.

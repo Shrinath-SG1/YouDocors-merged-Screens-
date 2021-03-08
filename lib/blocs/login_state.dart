@@ -4,5 +4,6 @@ class FormScreenState {
   // boolean value to check true or false
   bool isTrue;
   var memberId;
-  FormScreenState({this.isTrue,this.memberId});
+  bool isLoading;
+  FormScreenState({this.isTrue,this.memberId,this.isLoading});
 }

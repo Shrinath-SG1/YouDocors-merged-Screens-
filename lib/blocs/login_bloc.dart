@@ -27,17 +27,15 @@ class LoginBloc extends Bloc<FormScreenEvent, FormScreenState> {
 
         /// check if the status value is correct
         if (authenticateUser.header.statusCode == "200") {
-
-          var MemberId=authenticateUser.memberRole[0].memberId.toString();
+          var MemberId=authenticateUser.memberRole[0].memberId.toString();      ///storing member id in variable
           print('Member Id is....$MemberId');
           print('Authenticated Successful');
-          var result = await MySharedPreferences.instance.setStringValue(Keys.memberId, MemberId);
+          var result = await MySharedPreferences.instance.setStringValue(Keys.memberId, MemberId); ///storing member id in shared preference
           print('memberID result $result');
-
           yield FormScreenState(isTrue: true,memberId: MemberId);
 
           /// if the status value is not true return as false
-        } else if (authenticateUser.header.statusCode == "401") {
+        } else  {
           print('Authentication Failed');
           yield FormScreenState(isTrue: false);
         }

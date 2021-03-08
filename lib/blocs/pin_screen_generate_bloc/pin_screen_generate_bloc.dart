@@ -8,7 +8,7 @@ part 'pin_screen_generate_event.dart';
 part 'pin_screen_generate_state.dart';
 
 class PinScreenGenerateBloc extends Bloc<PinGenerateScreenEvent, PinGenerateScreenState> {
-  PinGenerateResponse pinGenerateResponse;
+  PinGenerateResponse pinGenerateResponse;                                      ///creating object of model class for pin generation
   PinScreenGenerateBloc(this.pinGenerateResponse) : super(PinGenerateScreenState());
 
   @override
@@ -17,11 +17,12 @@ class PinScreenGenerateBloc extends Bloc<PinGenerateScreenEvent, PinGenerateScre
   ) async* {
     // TODO: implement mapEventToState
     if(event is PinGenerateScreenEvent){
-      PinGenerateModel pinGenerateModel = await pinGenerateResponse.postApiMethod(event.memberId,event.pin);
+      print(event.memberId);
+      PinGenerateModel pinGenerateModel = await pinGenerateResponse.postApiMethod(event.memberId,event.pin);    ///storing api response in model class
       print(pinGenerateModel);
       if(pinGenerateModel.header.statusCode=="200") {
         print('Validate Screen');
-        yield PinGenerateScreenState(isTrue: true);
+        yield PinGenerateScreenState(isTrue: true);     ///returning true value if status code is 200
       }
       else if (pinGenerateModel.header.statusCode== "406"){
         print('ShowSnackbar');
