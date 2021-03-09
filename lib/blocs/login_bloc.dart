@@ -35,14 +35,14 @@ class LoginBloc extends Bloc<FormScreenEvent, FormScreenState> {
           var result = await MySharedPreferences.instance.setStringValue(Keys.memberId, MemberId); ///storing member id in shared preference
           print('memberID result $result');
 
-          if(authenticateUser.memberPin!=null){
+          if(authenticateUser.memberPin==""){
 
-           yield  FormScreenState(isTrue: true,memberId: MemberId,isPinAvailable: isPinAvailable=true);
+           yield  FormScreenState(isTrue: true,memberId: MemberId,isPinAvailable: isPinAvailable=false);
 
           }
           else
             {
-              yield FormScreenState(isTrue: true,memberId: MemberId,isPinAvailable: isPinAvailable=false);
+              yield FormScreenState(isTrue: true,memberId: MemberId,isPinAvailable: isPinAvailable=true);
 
             }
           /// if the status value is not true return as false

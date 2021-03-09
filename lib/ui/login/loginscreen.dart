@@ -73,7 +73,7 @@ class LoginState extends State<LoginScreen> {
       listener: (context, state) {
         /// if the status code is true it execute the statement else go to next statement
         if (state.isTrue == true) {
-          if(state.isPinAvailable!=null){
+          if(state.isPinAvailable==true){
             Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => Welcome()));
           }else{
