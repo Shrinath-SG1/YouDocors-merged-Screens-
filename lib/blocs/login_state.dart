@@ -5,5 +5,6 @@ class FormScreenState {
   bool isTrue;
   var memberId;
   bool isLoading;
-  FormScreenState({this.isTrue,this.memberId,this.isLoading});
+  bool isPinAvailable;
+  FormScreenState({this.isTrue,this.memberId,this.isLoading,this.isPinAvailable});
 }

@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
     return BlocProvider<LoginBloc>(
       create: (context) => LoginBloc(ApiServices()),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         home: LoginScreen(),
       ),

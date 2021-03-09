@@ -25,6 +25,8 @@ class LoginBloc extends Bloc<FormScreenEvent, FormScreenState> {
         print("My Email is ${event.email}");
         print(authenticateUser);
 
+        bool isPinAvailable;
+
         /// check if the status value is correct
         if (authenticateUser.header.statusCode == "200") {
           var MemberId=authenticateUser.memberRole[0].memberId.toString();      ///storing member id in variable
@@ -32,8 +34,17 @@ class LoginBloc extends Bloc<FormScreenEvent, FormScreenState> {
           print('Authenticated Successful');
           var result = await MySharedPreferences.instance.setStringValue(Keys.memberId, MemberId); ///storing member id in shared preference
           print('memberID result $result');
-          yield FormScreenState(isTrue: true,memberId: MemberId);
 
+          if(authenticateUser.memberPin!=null){
+
+           yield  FormScreenState(isTrue: true,memberId: MemberId,isPinAvailable: isPinAvailable=true);
+
+          }
+          else
+            {
+              yield FormScreenState(isTrue: true,memberId: MemberId,isPinAvailable: isPinAvailable=false);
+
+            }
           /// if the status value is not true return as false
         } else  {
           print('Authentication Failed');

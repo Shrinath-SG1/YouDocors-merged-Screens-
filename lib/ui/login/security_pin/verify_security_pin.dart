@@ -8,8 +8,11 @@ import 'package:YOURDRS_FlutterAPP/ui/login/security_pin/DemoScreen.dart';
 import 'package:YOURDRS_FlutterAPP/ui/login/security_pin/biometrics/local_auth_service.dart';
 import 'package:YOURDRS_FlutterAPP/ui/login/security_pin/biometrics/service_locator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:pinput/pin_put/pin_put.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
@@ -46,8 +49,74 @@ class PinPutView extends StatefulWidget {
 
 class PinPutViewState extends State<PinPutView> {
   final _formKey = GlobalKey<FormState>();
-bool visible=false;
-  //final LocalAuthenticationService _localAuth = locator<LocalAuthenticationService>();
+  bool visible = false;
+
+  final LocalAuthentication _localAuthentication = LocalAuthentication();
+
+
+  Future<bool> _isBiometricAvailable() async {
+    bool isAvailable = false;
+    try {
+      isAvailable = await _localAuthentication.canCheckBiometrics;
+    } on PlatformException catch (e) {
+      print(e);
+    }
+
+    if (!mounted) return isAvailable;
+
+    isAvailable
+        ? print('Biometric is available!')
+        : print('Biometric is unavailable.');
+
+    return isAvailable;
+  }
+
+  // To retrieve the list of biometric types
+  // (if available).
+  Future<void> _getListOfBiometricTypes() async {
+    List<BiometricType> listOfBiometrics;
+    try {
+      listOfBiometrics = await _localAuthentication.getAvailableBiometrics();
+    } on PlatformException catch (e) {
+      print(e);
+    }
+
+    if (!mounted) return;
+
+    print(listOfBiometrics);
+  }
+
+  bool isAuthenticated = false;
+
+  // Process of authentication user using
+  // biometrics.
+  Future<void> _authenticateUser() async {
+    try {
+      isAuthenticated = await _localAuthentication.authenticateWithBiometrics(
+        localizedReason:
+        "Please authenticate to view your transaction overview",
+        useErrorDialogs: true,
+        stickyAuth: true,
+      );
+    } on PlatformException catch (e) {
+      print(e);
+    }
+
+    if (!mounted) return;
+
+    isAuthenticated
+        ? print("user authenticated")
+        : print('User is not authenticated.');
+
+    if (isAuthenticated) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => Welcome(),
+        ),
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -178,12 +247,12 @@ bool visible=false;
                 context,
                 MaterialPageRoute(
                     builder: (context) => Welcome(
-                          data1: state.name,
+                        //  data1: state.name,
                         )));
           } else {
             _showSnackBar();
             setState(() {
-              visible=false;
+              visible = false;
             });
           }
         },
@@ -196,7 +265,9 @@ bool visible=false;
             children: <Widget>[
               Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Visibility(visible: false,child: Center(child: CircularProgressIndicator())),
+                  Visibility(
+                      visible: false,
+                      child: Center(child: CircularProgressIndicator())),
                   Container(
                     //color: Colors.yellowAccent,
                     child: Text(
@@ -265,7 +336,7 @@ bool visible=false;
                         onSubmit: (String pin) {
                           var Verify;
                           setState(() {
-                            visible=true;
+                            visible = true;
                           });
                           // var MemberID =memberIdFunction();
                           print("Verify Screen received id is ${widget.data}");
@@ -295,7 +366,17 @@ bool visible=false;
                 ),
                 Container(
                   child: GestureDetector(
-                    onTap: _showMyDialog,
+                    onTap: () async {
+                      print('Shared Preference Cleared');
+                      SharedPreferences preferences =
+                          await SharedPreferences.getInstance();
+                      await preferences.remove('login');
+                      MySharedPreferences.instance.removeValue('memberId');
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()));
+                    },
                     child: Text(
                       AppStrings.loginWithDiffAcc,
                       style: TextStyle(
@@ -310,14 +391,21 @@ bool visible=false;
                 ),
                 Container(
                   child: GestureDetector(
-                    // onTap: _localAuth.authenticate,
+                    onTap: () async {
+                      if (await _isBiometricAvailable()) {
+                        await _getListOfBiometricTypes();
+                        await _authenticateUser();
+                      }
+                    },
                     child: Text(
                       AppStrings.userTouchAndFaceId,
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
                   ),
                 ),
-                SizedBox(height: 25,),
+                SizedBox(
+                  height: 25,
+                ),
                 Visibility(
                     maintainSize: true,
                     maintainAnimation: true,
@@ -325,9 +413,7 @@ bool visible=false;
                     visible: visible,
                     child: Container(
                         margin: EdgeInsets.only(top: 20, bottom: 0),
-                        child: CircularProgressIndicator()
-                    )
-                ),
+                        child: CircularProgressIndicator())),
               ]),
               //_bottomAppBar,
             ],
@@ -348,10 +434,9 @@ bool visible=false;
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
-    return ListView(
-      children: [
-        Container(
-          height: MediaQuery.of(context).size.height,
+    return ListView(children: [
+      Container(
+        height: MediaQuery.of(context).size.height,
         color: CustomizedColors.PinScreenColor,
         child: BlocListener<PinScreenBloc, PinScreenState>(
           listener: (context, state) {
@@ -364,12 +449,12 @@ bool visible=false;
                   context,
                   MaterialPageRoute(
                       builder: (context) => Welcome(
-                        data1: state.name,
-                      )));
+                          // data1: state.name,
+                          )));
             } else {
               _showSnackBar();
               setState(() {
-                visible=false;
+                visible = false;
               });
             }
           },
@@ -447,12 +532,11 @@ bool visible=false;
                           eachFieldWidth: 20.0,
                           eachFieldHeight: 25.0,
                           onSubmit: (String pin) {
-                            setState(() {
-
-                            });
+                            setState(() {});
                             var Verify;
                             // var MemberID =memberIdFunction();
-                            print("Verify Screen received id is ${widget.data}");
+                            print(
+                                "Verify Screen received id is ${widget.data}");
                             // print("Verify Screen received id is $MemberID");
                             BlocProvider.of<PinScreenBloc>(context)
                                 .add(PinScreenEvent(
@@ -480,7 +564,16 @@ bool visible=false;
                   // ),
                   Container(
                     child: GestureDetector(
-                      onTap:()=> Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>LoginScreen())),
+                      onTap: () async {
+                        SharedPreferences preferences =
+                            await SharedPreferences.getInstance();
+                        await preferences.remove('login');
+                        MySharedPreferences.instance.removeValue('memberId');
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()));
+                      },
                       child: Text(
                         AppStrings.loginWithDiffAcc,
                         style: TextStyle(
@@ -495,14 +588,13 @@ bool visible=false;
                   ),
                   Container(
                     child: GestureDetector(
-                       onTap: _showMyDialog,
+                      onTap: _showMyDialog,
                       child: Text(
                         AppStrings.userTouchAndFaceId,
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     ),
                   ),
-
                 ]),
                 //_bottomAppBar,
               ],
@@ -510,18 +602,6 @@ bool visible=false;
           ),
         ),
       ),
-      ]
-    );
+    ]);
   }
 }
-
-// OrientationBuilder(
-// builder: (context, orientation){
-// if(orientation == Orientation.portrait){
-// return _portraitMode();
-// }else{
-// return _landscapeMode();
-// }
-// },
-// ),
-//);

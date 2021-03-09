@@ -4,6 +4,7 @@ import 'package:YOURDRS_FlutterAPP/common/app_icons.dart';
 import 'package:YOURDRS_FlutterAPP/common/app_strings.dart';
 import 'package:YOURDRS_FlutterAPP/data/repo/local/preference/local_storage.dart';
 import 'package:YOURDRS_FlutterAPP/ui/home/Home.dart';
+import 'package:YOURDRS_FlutterAPP/ui/login/security_pin/DemoScreen.dart';
 import 'package:YOURDRS_FlutterAPP/ui/login/security_pin/create_security_pin.dart';
 import 'package:YOURDRS_FlutterAPP/ui/login/security_pin/verify_security_pin.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,8 +14,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
 
-//final LocalStorage storage;
- // LoginScreen({Key key, @required this.storage}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -39,6 +38,7 @@ class LoginState extends State<LoginScreen> {
   SharedPreferences logindata;
   SharedPreferences MemberIdData;
   bool newuser;
+
   @override
   void initState() {
     super.initState();
@@ -48,14 +48,6 @@ class LoginState extends State<LoginScreen> {
     super.initState();
   }
 
-  // void initState() {
-  //   super.initState();
-  //   widget.storage.readCounter().then((int value) {
-  //     setState(() {
-  //       counter = value;
-  //     });
-  //   });
-  // }
   void check_if_already_login() async {
     logindata = await SharedPreferences.getInstance();
     newuser = (logindata.getBool('login') ?? true);
@@ -81,8 +73,14 @@ class LoginState extends State<LoginScreen> {
       listener: (context, state) {
         /// if the status code is true it execute the statement else go to next statement
         if (state.isTrue == true) {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => CreatePinScreen(data: state.memberId,)));
+          if(state.isPinAvailable!=null){
+            Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => Welcome()));
+          }else{
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => CreatePinScreen(data: state.memberId,)));
+
+          }
         } else {
          visible=false;
           showDialog(

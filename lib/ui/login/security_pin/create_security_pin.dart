@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:pinput/pin_put/pin_put.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final _formKey = GlobalKey<FormState>();
 
@@ -320,7 +321,12 @@ class PinPutViewState extends State<PinPutView> {
                           fontSize: 20,
                           decoration: TextDecoration.underline),
                     ),
-                    onTap:()=> Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>LoginScreen())),
+                    onTap:() async{
+                      SharedPreferences preferences = await SharedPreferences.getInstance();
+                      await preferences.remove('login');
+                      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>LoginScreen()));
+                    }
+
                   ),
                 ),
                 SizedBox(
