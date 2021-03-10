@@ -2,14 +2,15 @@ import 'package:YOURDRS_FlutterAPP/blocs/pin_screen_generate_bloc/pin_screen_gen
 import 'package:YOURDRS_FlutterAPP/common/app_colors.dart';
 import 'package:YOURDRS_FlutterAPP/common/app_icons.dart';
 import 'package:YOURDRS_FlutterAPP/common/app_strings.dart';
+import 'package:YOURDRS_FlutterAPP/data/repo/local/preference/local_storage.dart';
 import 'package:YOURDRS_FlutterAPP/data/service/pin_generation_api.dart';
-import 'package:YOURDRS_FlutterAPP/ui/login/security_pin/create_security_pin.dart';
-import 'package:YOURDRS_FlutterAPP/ui/login/security_pin/verify_security_pin.dart';
+import 'package:YOURDRS_FlutterAPP/ui/login/login_screen/loginscreen.dart';
+import 'package:YOURDRS_FlutterAPP/ui/login/security_pin_screen/create_security_pin.dart';
+import 'package:YOURDRS_FlutterAPP/ui/login/security_pin_screen/verify_security_pin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pin_put/pin_put.dart';
-
-import '../loginscreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ConfirmPinScreen extends StatelessWidget {
   ConfirmPinScreen({Key key, this.data1, this.data2}) : super(key: key);
@@ -271,10 +272,20 @@ class PinPutViewState extends State<PinPutView> {
                   SizedBox(
                     height: height * 0.10,
                   ),
-                  GestureDetector(
-                    onTap: () => Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => LoginScreen())),
-                    child: Container(
+                  Container(
+                    child: GestureDetector(
+                      onTap: () async {
+                        print('Shared Preference Cleared');
+                        SharedPreferences preferences =
+                            await SharedPreferences.getInstance();
+                        await preferences.remove('login');
+                        MySharedPreferences.instance.removeValue('memberId');
+                        MySharedPreferences.instance.removeValue('displayName');
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()));
+                      },
                       child: Text(
                         AppStrings.loginWithDiffAcc,
                         style: TextStyle(
@@ -284,15 +295,15 @@ class PinPutViewState extends State<PinPutView> {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: height * 0.02,
-                  ),
-                  Container(
-                    child: Text(
-                      AppStrings.userTouchAndFaceId,
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                  ),
+                  // SizedBox(
+                  //   height: height * 0.02,
+                  // ),
+                  // Container(
+                  //   child: Text(
+                  //     AppStrings.userTouchAndFaceId,
+                  //     style: TextStyle(color: Colors.white, fontSize: 20),
+                  //   ),
+                  // ),
                   Visibility(
                       maintainSize: true,
                       maintainAnimation: true,

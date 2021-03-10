@@ -1,51 +1,49 @@
-
 import 'package:YOURDRS_FlutterAPP/common/app_colors.dart';
 import 'package:YOURDRS_FlutterAPP/common/app_icons.dart';
 import 'package:YOURDRS_FlutterAPP/common/app_strings.dart';
-import 'package:YOURDRS_FlutterAPP/ui/login/loginscreen.dart';
-import 'package:YOURDRS_FlutterAPP/ui/login/security_pin/DemoScreen.dart';
-import 'package:YOURDRS_FlutterAPP/ui/login/security_pin/biometrics/local_auth_service.dart';
-import 'package:YOURDRS_FlutterAPP/ui/login/security_pin/biometrics/service_locator.dart';
-import 'package:YOURDRS_FlutterAPP/ui/login/security_pin/confirm_pin.dart';
+import 'package:YOURDRS_FlutterAPP/data/repo/local/preference/local_storage.dart';
+import 'package:YOURDRS_FlutterAPP/ui/login/login_screen/loginscreen.dart';
+import 'package:YOURDRS_FlutterAPP/ui/login/security_pin_screen/confirm_pin.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final _formKey = GlobalKey<FormState>();
 
 class CreatePinScreen extends StatelessWidget {
-  CreatePinScreen({
-    Key key,
-    this.data
-  }) : super(key: key);
+  CreatePinScreen({Key key, this.data}) : super(key: key);
   final String data;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-          body: PinPutView(data1: data,)
-      ),
+          body: PinPutView(
+        data1: data,
+      )),
     );
   }
 }
 
 class PinPutView extends StatefulWidget {
-  PinPutView({Key key, this.data1,}) : super(key: key);
+  PinPutView({
+    Key key,
+    this.data1,
+  }) : super(key: key);
   final String data1;
+
   @override
   PinPutViewState createState() => PinPutViewState();
 }
+
 class PinPutViewState extends State<PinPutView> {
 //  final LocalAuthenticationService _localAuth = locator<LocalAuthenticationService>();
 
   @override
   Widget build(BuildContext context) {
-
     var StorePin;
-     var MemberId= int.parse(widget.data1);
+    var MemberId = int.parse(widget.data1);
     // TODO: implement build
     final BoxDecoration pinPutDecoration = BoxDecoration(
       color: Colors.white,
@@ -59,7 +57,7 @@ class PinPutViewState extends State<PinPutView> {
       return Container(
         color: CustomizedColors.PinScreenColor,
         child: Container(
-        //  height: height,
+          //  height: height,
           // width: width,
 
           child: Stack(
@@ -136,11 +134,13 @@ class PinPutViewState extends State<PinPutView> {
                           print('Saved Value is $pin');
                           Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(                                   ///here we are sending our Member id and Pin to confirmation Screen.
-                                  builder: (context) => ConfirmPinScreen(
-                                        data1: pin,data2: MemberId.toString(),
-                                      )));
+                              MaterialPageRoute(
 
+                                  ///here we are sending our Member id and Pin to confirmation Screen.
+                                  builder: (context) => ConfirmPinScreen(
+                                        data1: pin,
+                                        data2: MemberId.toString(),
+                                      )));
                         },
                         submittedFieldDecoration: pinPutDecoration,
                         selectedFieldDecoration: pinPutDecoration.copyWith(
@@ -161,6 +161,18 @@ class PinPutViewState extends State<PinPutView> {
                 ),
                 Container(
                   child: GestureDetector(
+                    onTap: () async {
+                      print('Shared Preference Cleared');
+                      SharedPreferences preferences =
+                      await SharedPreferences.getInstance();
+                      await preferences.remove('login');
+                      MySharedPreferences.instance.removeValue('memberId');
+                      MySharedPreferences.instance.removeValue('displayName');
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()));
+                    },
                     child: Text(
                       AppStrings.loginWithDiffAcc,
                       style: TextStyle(
@@ -170,20 +182,20 @@ class PinPutViewState extends State<PinPutView> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: height * 0.02,
-                ),
-                Container(
-                  child: GestureDetector(
-                    //onTap: _localAuth.authenticate,
-                    //   () => Navigator.of(context).push(
-                    // MaterialPageRoute(builder: (context) => FingerprintPage(),),),
-                    child: Text(
-                      AppStrings.userTouchAndFaceId,
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                  ),
-                ),
+                // SizedBox(
+                //   height: height * 0.02,
+                // ),
+                // Container(
+                //   child: GestureDetector(
+                //     //onTap: _localAuth.authenticate,
+                //     //   () => Navigator.of(context).push(
+                //     // MaterialPageRoute(builder: (context) => FingerprintPage(),),),
+                //     child: Text(
+                //       AppStrings.userTouchAndFaceId,
+                //       style: TextStyle(color: Colors.white, fontSize: 20),
+                //     ),
+                //   ),
+                // ),
               ]),
               //_bottomAppBar,
             ],
@@ -191,8 +203,10 @@ class PinPutViewState extends State<PinPutView> {
         ),
       );
     }
+
     Widget _bigDisplay() {
-      return buildSingleChildScrollView(height, width, StorePin, context, pinPutDecoration);
+      return buildSingleChildScrollView(
+          height, width, StorePin, context, pinPutDecoration);
     }
 
     return Scaffold(
@@ -206,7 +220,8 @@ class PinPutViewState extends State<PinPutView> {
     );
   }
 
-  SingleChildScrollView buildSingleChildScrollView(double height, double width, StorePin, BuildContext context, BoxDecoration pinPutDecoration) {
+  SingleChildScrollView buildSingleChildScrollView(double height, double width,
+      StorePin, BuildContext context, BoxDecoration pinPutDecoration) {
     return SingleChildScrollView(
       child: Container(
         color: CustomizedColors.PinScreenColor,
@@ -286,14 +301,16 @@ class PinPutViewState extends State<PinPutView> {
                         onSubmit: (String pin) {
                           //StorePin = pin;
                           print('Saved Value is $pin');
-                          var MemberId= int.parse(widget.data1);
+                          var MemberId = int.parse(widget.data1);
                           Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(                                   ///here we are sending our Member id and Pin to confirmation Screen.
-                                  builder: (context) => ConfirmPinScreen(
-                                    data1: pin,data2: MemberId.toString(),
-                                  )));
+                              MaterialPageRoute(
 
+                                  ///here we are sending our Member id and Pin to confirmation Screen.
+                                  builder: (context) => ConfirmPinScreen(
+                                        data1: pin,
+                                        data2: MemberId.toString(),
+                                      )));
                         },
                         submittedFieldDecoration: pinPutDecoration,
                         selectedFieldDecoration: pinPutDecoration.copyWith(
@@ -314,6 +331,18 @@ class PinPutViewState extends State<PinPutView> {
                 ),
                 Container(
                   child: GestureDetector(
+                    onTap: () async {
+                      print('Shared Preference Cleared');
+                      SharedPreferences preferences =
+                      await SharedPreferences.getInstance();
+                      await preferences.remove('login');
+                      MySharedPreferences.instance.removeValue('memberId');
+                      MySharedPreferences.instance.removeValue('displayName');
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()));
+                    },
                     child: Text(
                       AppStrings.loginWithDiffAcc,
                       style: TextStyle(
@@ -321,28 +350,22 @@ class PinPutViewState extends State<PinPutView> {
                           fontSize: 20,
                           decoration: TextDecoration.underline),
                     ),
-                    onTap:() async{
-                      SharedPreferences preferences = await SharedPreferences.getInstance();
-                      await preferences.remove('login');
-                      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>LoginScreen()));
-                    }
-
                   ),
                 ),
-                SizedBox(
-                  height: height * 0.02,
-                ),
-                Container(
-                  child: GestureDetector(
-                  //  onTap: _localAuth.authenticate,
-                    //   () => Navigator.of(context).push(
-                    // MaterialPageRoute(builder: (context) => FingerprintPage(),),),
-                    child: Text(
-                      AppStrings.userTouchAndFaceId,
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                  ),
-                ),
+                // SizedBox(
+                //   height: height * 0.02,
+                // ),
+                // Container(
+                //   child: GestureDetector(
+                //   //  onTap: _localAuth.authenticate,
+                //     //   () => Navigator.of(context).push(
+                //     // MaterialPageRoute(builder: (context) => FingerprintPage(),),),
+                //     child: Text(
+                //       AppStrings.userTouchAndFaceId,
+                //       style: TextStyle(color: Colors.white, fontSize: 20),
+                //     ),
+                //   ),
+                // ),
               ]),
               //_bottomAppBar,
             ],

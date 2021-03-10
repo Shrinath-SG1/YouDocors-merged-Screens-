@@ -1,8 +1,7 @@
 import 'dart:async';
-
 import 'package:YOURDRS_FlutterAPP/common/app_colors.dart';
 import 'package:YOURDRS_FlutterAPP/common/app_icons.dart';
-import 'package:YOURDRS_FlutterAPP/ui/login/loginscreen.dart';
+import 'package:YOURDRS_FlutterAPP/ui/login/login_screen/loginscreen.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {

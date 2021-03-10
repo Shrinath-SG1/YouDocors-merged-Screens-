@@ -1,14 +1,9 @@
-import 'dart:convert';
-
 import 'package:YOURDRS_FlutterAPP/common/app_icons.dart';
-import 'package:YOURDRS_FlutterAPP/data/model/pin_validate_model.dart';
 import 'package:YOURDRS_FlutterAPP/data/repo/local/preference/local_storage.dart';
+import 'package:YOURDRS_FlutterAPP/ui/login/login_screen/loginscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../loginscreen.dart';
-
 class Welcome extends StatelessWidget {
   var displayName;
   var profilePic;
