@@ -6,5 +6,14 @@ class FormScreenState {
   var memberId;
   bool isLoading;
   bool isPinAvailable;
-  FormScreenState({this.isTrue,this.memberId,this.isLoading,this.isPinAvailable});
+  var displayName;
+  var profileImg;
+
+  FormScreenState(
+      {this.isTrue,
+      this.memberId,
+      this.isLoading,
+      this.isPinAvailable,
+      this.displayName,
+      this.profileImg});
 }

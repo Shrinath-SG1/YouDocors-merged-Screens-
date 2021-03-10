@@ -5,7 +5,7 @@ import 'package:YOURDRS_FlutterAPP/common/app_strings.dart';
 class PinGenerateResponse {
 
 Future<PinGenerateModel> postApiMethod(int MemberId,String Pin) async {
-  String apiUrl = ApiUrlConstants2.generatePin;
+  String apiUrl = ApiUrlConstants.generatePin;
 
   final json = {
     "memberId": MemberId,

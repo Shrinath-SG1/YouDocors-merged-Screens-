@@ -1,10 +1,11 @@
 part of 'pin_screen_generate_bloc.dart';
 
-class PinGenerateScreenState{
+class PinGenerateScreenState {
   bool isTrue;
+
   // bool Loading;
-  PinGenerateScreenState({this.isTrue,
+  PinGenerateScreenState({
+    this.isTrue,
     // this.Loading
   });
-
 }

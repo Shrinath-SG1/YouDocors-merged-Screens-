@@ -21,8 +21,13 @@ class AppIcons {
   static const doctor_img = "assets/images/doctor_img.png";
   static const alert_img = "assets/images/login_successful.gif";
 
+
 }
 
 class AppImages {
   static const placeholder = "assets/images/placeholder.png";
+  static const SplashLogo = "assets/images/your_drs_logo.png";
+  static const doctorImg = 'assets/images/doctor_img.png';
+  static const pinImage =   'assets/images/PinImage.png';
+
 }

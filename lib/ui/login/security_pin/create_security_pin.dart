@@ -1,5 +1,6 @@
 
 import 'package:YOURDRS_FlutterAPP/common/app_colors.dart';
+import 'package:YOURDRS_FlutterAPP/common/app_icons.dart';
 import 'package:YOURDRS_FlutterAPP/common/app_strings.dart';
 import 'package:YOURDRS_FlutterAPP/ui/login/loginscreen.dart';
 import 'package:YOURDRS_FlutterAPP/ui/login/security_pin/DemoScreen.dart';
@@ -37,7 +38,6 @@ class PinPutView extends StatefulWidget {
   @override
   PinPutViewState createState() => PinPutViewState();
 }
-
 class PinPutViewState extends State<PinPutView> {
 //  final LocalAuthenticationService _localAuth = locator<LocalAuthenticationService>();
 
@@ -45,7 +45,7 @@ class PinPutViewState extends State<PinPutView> {
   Widget build(BuildContext context) {
 
     var StorePin;
-     var MemberId=int.parse(widget.data1);
+     var MemberId= int.parse(widget.data1);
     // TODO: implement build
     final BoxDecoration pinPutDecoration = BoxDecoration(
       color: Colors.white,
@@ -80,7 +80,7 @@ class PinPutViewState extends State<PinPutView> {
                   ),
                   Container(
                     height: 70,
-                    child: Image.asset(AppStrings.doctorImg),
+                    child: Image.asset(AppImages.doctorImg),
                   )
                 ]),
                 SizedBox(
@@ -91,7 +91,7 @@ class PinPutViewState extends State<PinPutView> {
                   child: Container(
                       height: height * 0.13,
                       //width: width*0.25,
-                      child: Image.asset(AppStrings.pinImage)),
+                      child: Image.asset(AppImages.pinImage)),
                 ),
                 SizedBox(
                   height: height * 0.03,
@@ -232,7 +232,7 @@ class PinPutViewState extends State<PinPutView> {
                   ),
                   Container(
                     height: 70,
-                    child: Image.asset(AppStrings.doctorImg),
+                    child: Image.asset(AppImages.doctorImg),
                   )
                 ]),
                 SizedBox(
@@ -243,7 +243,7 @@ class PinPutViewState extends State<PinPutView> {
                   child: Container(
                       height: height * 0.13,
                       //width: width*0.25,
-                      child: Image.asset(AppStrings.pinImage)),
+                      child: Image.asset(AppImages.pinImage)),
                 ),
                 SizedBox(
                   height: height * 0.03,
@@ -284,16 +284,16 @@ class PinPutViewState extends State<PinPutView> {
                         eachFieldWidth: 20.0,
                         eachFieldHeight: 25.0,
                         onSubmit: (String pin) {
-                          StorePin = pin;
-                          print('Saved Value is $StorePin');
-                          //Navigator.push(context, MaterialPageRoute(builder: (context)=>Welcome()));
-                          Navigator.push(
+                          //StorePin = pin;
+                          print('Saved Value is $pin');
+                          var MemberId= int.parse(widget.data1);
+                          Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(
+                              MaterialPageRoute(                                   ///here we are sending our Member id and Pin to confirmation Screen.
                                   builder: (context) => ConfirmPinScreen(
-                                    data1: StorePin,
-                                    data2: widget.data1,
+                                    data1: pin,data2: MemberId.toString(),
                                   )));
+
                         },
                         submittedFieldDecoration: pinPutDecoration,
                         selectedFieldDecoration: pinPutDecoration.copyWith(

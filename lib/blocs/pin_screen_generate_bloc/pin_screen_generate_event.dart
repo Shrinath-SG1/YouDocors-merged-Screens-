@@ -5,6 +5,7 @@ class PinGenerateScreenEvent {
   var generate;
   var memberId;
 
+  PinGenerateScreenEvent(this.pin, this.generate, this.memberId);
+}
 
-  PinGenerateScreenEvent(this.pin,this.generate,this.memberId);
-}///this is event class for pin generation.
+///this is event class for pin generation.

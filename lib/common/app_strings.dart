@@ -20,11 +20,10 @@ class AppStrings {
   static const enter_password = 'Please enter your password';
   static const wrong_password = 'Enter the correct password';
   static const wrong_password_email = 'Enter the correct Email and Password';
+
   ///pin screen
 
   static const yourDrs = "YOURDRS";
-  static const doctorImg = 'assets/images/doctor_img.png';
-  static const pinImage =   'assets/images/PinImage.png';
   static const loginWithDiffAcc = "Login with different account";
   static const userTouchAndFaceId = 'Use Touch or Face ID';
   static const enterPin = "Enter PIN";
@@ -34,23 +33,21 @@ class AppStrings {
   static const pinNotMatched = "Pin Not Matched";
 }
 
+///Team1
 class ApiUrlConstants {
-
   /// getting the user Data
   static const getUser =
       AppConstants.dioBaseUrl + "api/Account/AuthenticateUser";
+  static const getUserValidate = AppConstants.dioBaseUrl + "api/Account/ValidatePin";
+  static const generatePin =
+      AppConstants.dioBaseUrl + "api/Account/GenerateMemberPin";
 }
-
 
 //Team1
 
-
-class ApiUrlConstants2 {
-
-  /// getting the user Data
-  static const getUser =
-      AppConstants.dioBaseUrl + "api/Account/ValidatePin";
-  static const generatePin =
-      AppConstants.dioBaseUrl + "api/Account/GenerateMemberPin";
-
-}
+// class ApiUrlConstants2 {
+//   /// getting the user Data
+//   static const getUser = AppConstants.dioBaseUrl + "api/Account/ValidatePin";
+//   static const generatePin =
+//       AppConstants.dioBaseUrl + "api/Account/GenerateMemberPin";
+// }

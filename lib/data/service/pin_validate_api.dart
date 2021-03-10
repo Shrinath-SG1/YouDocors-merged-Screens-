@@ -7,7 +7,7 @@ import 'dart:convert';
 class PinRepo {
   Future<PinResponse> postApiMethod(String MemberId,String Pin) async{
     try {
-      var endpointUrl = ApiUrlConstants2.getUser;
+      var endpointUrl = ApiUrlConstants.getUserValidate;
       Map<String, dynamic> queryParams = {
         'MemberId': MemberId,
         'Pin': Pin,

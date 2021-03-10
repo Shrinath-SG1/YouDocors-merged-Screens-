@@ -16,18 +16,31 @@ class PinScreenGenerateBloc extends Bloc<PinGenerateScreenEvent, PinGenerateScre
     PinGenerateScreenEvent event,
   ) async* {
     // TODO: implement mapEventToState
-    if(event is PinGenerateScreenEvent){
+    if(event is PinGenerateScreenEvent) {
+      ///checking if event is present in Event class
       print(event.memberId);
-      PinGenerateModel pinGenerateModel = await pinGenerateResponse.postApiMethod(event.memberId,event.pin);    ///storing api response in model class
+      PinGenerateModel pinGenerateModel = await pinGenerateResponse
+          .postApiMethod(event.memberId, event.pin);
+
+      ///storing api response in model class
       print(pinGenerateModel);
-      if(pinGenerateModel.header.statusCode=="200") {
+      try{
+      if (pinGenerateModel.header.statusCode == "200") {
+        ///checking for status code of response.
         print('Validate Screen');
-        yield PinGenerateScreenState(isTrue: true);     ///returning true value if status code is 200
+        yield PinGenerateScreenState(isTrue: true);
+
+        ///if true then navigating to next screen
       }
-      else if (pinGenerateModel.header.statusCode== "406"){
+      else if (pinGenerateModel.header.statusCode == "406") {
+        ///else showing message to user
         print('ShowSnackbar');
         yield PinGenerateScreenState(isTrue: false);
       }
+    }
+    catch(exception){
+        print('Unknown Error:$exception');
+    }
     }
   }
 }

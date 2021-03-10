@@ -1,5 +1,6 @@
 import 'package:YOURDRS_FlutterAPP/blocs/pin_screen_validate_bloc/pin_screen_validate_bloc.dart';
 import 'package:YOURDRS_FlutterAPP/common/app_colors.dart';
+import 'package:YOURDRS_FlutterAPP/common/app_icons.dart';
 import 'package:YOURDRS_FlutterAPP/common/app_strings.dart';
 import 'package:YOURDRS_FlutterAPP/data/repo/local/preference/local_storage.dart';
 import 'package:YOURDRS_FlutterAPP/data/service/pin_validate_api.dart';
@@ -48,6 +49,9 @@ class PinPutView extends StatefulWidget {
 }
 
 class PinPutViewState extends State<PinPutView> {
+  var name;
+  var img;
+
   final _formKey = GlobalKey<FormState>();
   bool visible = false;
 
@@ -111,7 +115,7 @@ class PinPutViewState extends State<PinPutView> {
     if (isAuthenticated) {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => Welcome(),
+          builder: (context) => Welcome(displayName: name,profilePic: img,),
         ),
       );
     }
@@ -234,29 +238,35 @@ class PinPutViewState extends State<PinPutView> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
-    return Container(
-      color: CustomizedColors.PinScreenColor,
-      child: BlocListener<PinScreenBloc, PinScreenState>(
-        listener: (context, state) {
-          // if(state.Loading==true){
-          //   return Center(child: CircularProgressIndicator());
-          //
-          // }
-          if (state.isTrue == true) {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Welcome(
-                        //  data1: state.name,
-                        )));
-          } else {
-            _showSnackBar();
+    return ListView(
+      children: [
+        Container(
+        color: CustomizedColors.PinScreenColor,
+        child: BlocListener<PinScreenBloc, PinScreenState>(
+          listener: (context, state) {
+            // if(state.Loading==true){
+            //   return Center(child: CircularProgressIndicator());
+            //
+            // }
             setState(() {
-              visible = false;
+              img=state.displayPic;
+              name=state.name;
             });
-          }
-        },
-        child: Container(
+            if (state.isTrue == true) {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Welcome(
+                          displayName: state.displayName.toString(),profilePic: state.displayPic,
+                          )));
+            } else {
+              _showSnackBar();
+              setState(() {
+                visible = false;
+              });
+            }
+          },
+          child: Container(
           height: height,
           // width: width,
 
@@ -281,7 +291,7 @@ class PinPutViewState extends State<PinPutView> {
                   ),
                   Container(
                     height: 70,
-                    child: Image.asset(AppStrings.doctorImg),
+                    child: Image.asset(AppImages.doctorImg),
                   )
                 ]),
                 SizedBox(
@@ -292,7 +302,7 @@ class PinPutViewState extends State<PinPutView> {
                   child: Container(
                       height: height * 0.13,
                       //width: width*0.25,
-                      child: Image.asset(AppStrings.pinImage)),
+                      child: Image.asset(AppImages.pinImage)),
                 ),
                 SizedBox(
                   height: height * 0.03,
@@ -372,6 +382,7 @@ class PinPutViewState extends State<PinPutView> {
                           await SharedPreferences.getInstance();
                       await preferences.remove('login');
                       MySharedPreferences.instance.removeValue('memberId');
+                      MySharedPreferences.instance.removeValue('displayName');
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
@@ -418,8 +429,10 @@ class PinPutViewState extends State<PinPutView> {
               //_bottomAppBar,
             ],
           ),
+            ),
         ),
       ),
+      ]
     );
   }
 
@@ -449,8 +462,8 @@ class PinPutViewState extends State<PinPutView> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => Welcome(
-                          // data1: state.name,
-                          )));
+                        displayName: state.displayName.toString(),profilePic: state.displayPic,
+                      )));
             } else {
               _showSnackBar();
               setState(() {
@@ -479,7 +492,7 @@ class PinPutViewState extends State<PinPutView> {
                     ),
                     Container(
                       height: 70,
-                      child: Image.asset(AppStrings.doctorImg),
+                      child: Image.asset(AppImages.doctorImg),
                     )
                   ]),
                   SizedBox(
@@ -488,9 +501,9 @@ class PinPutViewState extends State<PinPutView> {
                   Padding(
                     padding: const EdgeInsets.only(top: 0, bottom: 0),
                     child: Container(
-                        height: height * 0.13,
-                        //width: width*0.25,
-                        child: Image.asset(AppStrings.pinImage)),
+                        height: height * 0.14,
+                       // width: width*0.25,
+                        child: Image.asset(AppImages.pinImage)),
                   ),
                   SizedBox(
                     height: height * 0.03,
@@ -532,11 +545,12 @@ class PinPutViewState extends State<PinPutView> {
                           eachFieldWidth: 20.0,
                           eachFieldHeight: 25.0,
                           onSubmit: (String pin) {
-                            setState(() {});
                             var Verify;
+                            setState(() {
+                              visible = true;
+                            });
                             // var MemberID =memberIdFunction();
-                            print(
-                                "Verify Screen received id is ${widget.data}");
+                            print("Verify Screen received id is ${widget.data}");
                             // print("Verify Screen received id is $MemberID");
                             BlocProvider.of<PinScreenBloc>(context)
                                 .add(PinScreenEvent(
@@ -605,3 +619,4 @@ class PinPutViewState extends State<PinPutView> {
     ]);
   }
 }
+

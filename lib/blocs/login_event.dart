@@ -4,6 +4,5 @@ class FormScreenEvent {
   var email;
   var password;
 
-
-  FormScreenEvent(this.email,this.password);
+  FormScreenEvent(this.email, this.password);
 }

@@ -34,4 +34,5 @@ class MySharedPreferences {
 
 class Keys {
   static const String memberId = 'memberId';
+  static const String displayName = 'displayName';
 }
