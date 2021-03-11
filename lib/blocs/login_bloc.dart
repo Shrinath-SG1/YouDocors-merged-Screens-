@@ -48,8 +48,11 @@ class LoginBloc extends Bloc<FormScreenEvent, FormScreenState> {
 
           ///storing member id in shared preference
           print('memberID result $result');
-          // var ProfilePic=await MySharedPreferences.instance.setStringValue(Keys.displayName, displayyName);
-          // print(ProfilePic);
+           var ProfilePic=await MySharedPreferences.instance.setStringValue(Keys.displayPic, profilePic);
+           print("Profile Pic is $ProfilePic");
+          var displayName=await MySharedPreferences.instance.setStringValue(Keys.displayName, displayyName);
+          print("display name is  $displayName");
+
 
           if (authenticateUser.memberPin == "") {
             ///here we are checking if user is having member pin or not based on that we are returning true/false value to Bloc listner.
@@ -58,15 +61,17 @@ class LoginBloc extends Bloc<FormScreenEvent, FormScreenState> {
                 isTrue: true,
                 memberId: MemberId,
                 isPinAvailable: isPinAvailable = false,
-                displayName: displayyName.toString(),
-                profileImg: profilePic.toString());
+                // displayName: displayyName.toString(),
+                // profileImg: profilePic.toString()
+            );
           } else {
             yield FormScreenState(
                 isTrue: true,
                 memberId: MemberId,
                 isPinAvailable: isPinAvailable = true,
-                displayName: displayyName.toString(),
-                profileImg: profilePic.toString());
+                // displayName: displayyName.toString(),
+                // profileImg: profilePic.toString()
+            );
           }
 
           /// if the status value is not true return as false

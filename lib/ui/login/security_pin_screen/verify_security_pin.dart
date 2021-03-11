@@ -16,12 +16,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
 class VerifyPinScreen extends StatelessWidget {
-  VerifyPinScreen({
-    Key key,
-    this.data1,
-  }) : super(key: key);
-  final String data1;
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider<PinScreenBloc>(
@@ -29,19 +23,13 @@ class VerifyPinScreen extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         // navigatorKey: navigatorKey,
-        home: Scaffold(
-            body: PinPutView(
-          data: data1,
-        )),
+        home: Scaffold(body: PinPutView()),
       ),
     );
   }
 }
 
 class PinPutView extends StatefulWidget {
-  PinPutView({Key key, this.data}) : super(key: key);
-  final String data;
-
   @override
   PinPutViewState createState() => PinPutViewState();
 }
@@ -54,7 +42,6 @@ class PinPutViewState extends State<PinPutView> {
   bool visible = false;
 
   final LocalAuthentication _localAuthentication = LocalAuthentication();
-
 
   Future<bool> _isBiometricAvailable() async {
     bool isAvailable = false;
@@ -73,8 +60,8 @@ class PinPutViewState extends State<PinPutView> {
     return isAvailable;
   }
 
-  // To retrieve the list of biometric types
-  // (if available).
+  /// To retrieve the list of biometric types
+  /// (if available).
   Future<void> _getListOfBiometricTypes() async {
     List<BiometricType> listOfBiometrics;
     try {
@@ -90,13 +77,13 @@ class PinPutViewState extends State<PinPutView> {
 
   bool isAuthenticated = false;
 
-  // Process of authentication user using
-  // biometrics.
+  /// Process of authentication user using
+  /// biometrics.
   Future<void> _authenticateUser() async {
     try {
       isAuthenticated = await _localAuthentication.authenticateWithBiometrics(
         localizedReason:
-        "Please authenticate to view your transaction overview",
+            "Please authenticate to view your transaction overview",
         useErrorDialogs: true,
         stickyAuth: true,
       );
@@ -113,24 +100,14 @@ class PinPutViewState extends State<PinPutView> {
     if (isAuthenticated) {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => Welcome(displayName: name,profilePic: img,),
+          builder: (context) => Welcome(),
         ),
       );
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    // final dataBloc = BlocProvider.of<DataBloc>(context);
-    // void dispose() {
-    //   dataBloc.close();
-    // }
-
-    //var StoredPin = widget.data;
-    //var StoredPin=PinResponse().toJson();
-    //var temp= PinResponse().toJson();
-
     return Scaffold(
       body: LayoutBuilder(builder: (context, constraints) {
         if (constraints.maxWidth > 500) {
@@ -236,27 +213,18 @@ class PinPutViewState extends State<PinPutView> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
-    return ListView(
-      children: [
-        Container(
+    return ListView(children: [
+      Container(
         color: CustomizedColors.PinScreenColor,
         child: BlocListener<PinScreenBloc, PinScreenState>(
           listener: (context, state) {
-            // if(state.Loading==true){
-            //   return Center(child: CircularProgressIndicator());
-            //
-            // }
             setState(() {
-              img=state.displayPic;
-              name=state.name;
+              img = state.displayPic;
+              name = state.name;
             });
             if (state.isTrue == true) {
               Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Welcome(
-                          displayName: state.displayName.toString(),profilePic: state.displayPic,
-                          )));
+                  context, MaterialPageRoute(builder: (context) => Welcome()));
             } else {
               _showSnackBar();
               setState(() {
@@ -265,173 +233,171 @@ class PinPutViewState extends State<PinPutView> {
             }
           },
           child: Container(
-          height: height,
-          // width: width,
+            height: height,
+            // width: width,
 
-          child: Stack(
-            fit: StackFit.passthrough,
-            children: <Widget>[
-              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Visibility(
-                      visible: false,
-                      child: Center(child: CircularProgressIndicator())),
+            child: Stack(
+              fit: StackFit.passthrough,
+              children: <Widget>[
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Visibility(
+                        visible: false,
+                        child: Center(child: CircularProgressIndicator())),
+                    Container(
+                      //color: Colors.yellowAccent,
+                      child: Text(
+                        AppStrings.yourDrs,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 50,
+                            letterSpacing: 2,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Container(
+                      height: 70,
+                      child: Image.asset(AppImages.doctorImg),
+                    )
+                  ]),
+                  SizedBox(
+                    height: height * 0.05,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 0, bottom: 0),
+                    child: Container(
+                        height: height * 0.13,
+                        //width: width*0.25,
+                        child: Image.asset(AppImages.pinImage)),
+                  ),
+                  SizedBox(
+                    height: height * 0.03,
+                  ),
                   Container(
-                    //color: Colors.yellowAccent,
                     child: Text(
-                      AppStrings.yourDrs,
+                      AppStrings.enterPin,
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 50,
-                          letterSpacing: 2,
-                          fontWeight: FontWeight.bold),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
                     ),
                   ),
+                  SizedBox(height: height * 0.05),
                   Container(
-                    height: 70,
-                    child: Image.asset(AppImages.doctorImg),
-                  )
-                ]),
-                SizedBox(
-                  height: height * 0.05,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 0, bottom: 0),
-                  child: Container(
-                      height: height * 0.13,
-                      //width: width*0.25,
-                      child: Image.asset(AppImages.pinImage)),
-                ),
-                SizedBox(
-                  height: height * 0.03,
-                ),
-                Container(
-                  child: Text(
-                    AppStrings.enterPin,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ),
-                SizedBox(height: height * 0.05),
-                Container(
-                  height: height * 0.06,
-                  width: width * 0.65,
-                  // color: Colors.deepPurpleAccent,
-                  child:
-                      // EnterInputFields(data2: widget.data,),
-                      Form(
-                    key: _formKey,
-                    child: GestureDetector(
-                      onLongPress: () {
-                        print(_formKey.currentState.validate());
-                      },
-                      child: PinPut(
-                        validator: (s) {
-                          if (s.contains('1')) return null;
-                          return '';
+                    height: height * 0.06,
+                    width: width * 0.65,
+                    // color: Colors.deepPurpleAccent,
+                    child:
+                        // EnterInputFields(data2: widget.data,),
+                        Form(
+                      key: _formKey,
+                      child: GestureDetector(
+                        onLongPress: () {
+                          print(_formKey.currentState.validate());
                         },
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        withCursor: true,
-                        fieldsCount: 4,
-                        fieldsAlignment: MainAxisAlignment.spaceAround,
-                        textStyle: const TextStyle(
-                            fontSize: 25.0, color: Colors.black),
-                        eachFieldMargin: EdgeInsets.all(0),
-                        eachFieldWidth: 20.0,
-                        eachFieldHeight: 25.0,
-                        onSubmit: (String pin) {
-                          var Verify;
-                          setState(() {
-                            visible = true;
-                          });
-                          // var MemberID =memberIdFunction();
-                          print("Verify Screen received id is ${widget.data}");
-                          // print("Verify Screen received id is $MemberID");
-                          BlocProvider.of<PinScreenBloc>(context)
-                              .add(PinScreenEvent(
-                            pin,
-                            Verify,
-                          ));
-                        },
-                        submittedFieldDecoration: pinPutDecoration,
-                        selectedFieldDecoration: pinPutDecoration.copyWith(
-                          color: Colors.white,
-                          border: Border.all(
-                            width: 2,
-                            color: const Color.fromRGBO(160, 215, 220, 1),
+                        child: PinPut(
+                          validator: (s) {
+                            if (s.contains('1')) return null;
+                            return '';
+                          },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          withCursor: true,
+                          fieldsCount: 4,
+                          fieldsAlignment: MainAxisAlignment.spaceAround,
+                          textStyle: const TextStyle(
+                              fontSize: 25.0, color: Colors.black),
+                          eachFieldMargin: EdgeInsets.all(0),
+                          eachFieldWidth: 20.0,
+                          eachFieldHeight: 25.0,
+                          onSubmit: (String pin) {
+                            var Verify;
+                            setState(() {
+                              visible = true;
+                            });
+                            // var MemberID =memberIdFunction();
+                            // print("Verify Screen received id is $MemberID");
+                            BlocProvider.of<PinScreenBloc>(context)
+                                .add(PinScreenEvent(
+                              pin,
+                              Verify,
+                            ));
+                          },
+                          submittedFieldDecoration: pinPutDecoration,
+                          selectedFieldDecoration: pinPutDecoration.copyWith(
+                            color: Colors.white,
+                            border: Border.all(
+                              width: 2,
+                              color: const Color.fromRGBO(160, 215, 220, 1),
+                            ),
                           ),
+                          followingFieldDecoration: pinPutDecoration,
+                          pinAnimationType: PinAnimationType.scale,
                         ),
-                        followingFieldDecoration: pinPutDecoration,
-                        pinAnimationType: PinAnimationType.scale,
                       ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: height * 0.10,
-                ),
-                Container(
-                  child: GestureDetector(
-                    onTap: () async {
-                      print('Shared Preference Cleared');
-                      SharedPreferences preferences =
-                          await SharedPreferences.getInstance();
-                      await preferences.remove('login');
-                      MySharedPreferences.instance.removeValue('memberId');
-                      MySharedPreferences.instance.removeValue('displayName');
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginScreen()));
-                    },
-                    child: Text(
-                      AppStrings.loginWithDiffAcc,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          decoration: TextDecoration.underline),
+                  SizedBox(
+                    height: height * 0.10,
+                  ),
+                  Container(
+                    child: GestureDetector(
+                      onTap: () async {
+                        print('Shared Preference Cleared');
+                        SharedPreferences preferences =
+                            await SharedPreferences.getInstance();
+                        await preferences.remove('login');
+                        MySharedPreferences.instance.removeValue('memberId');
+                        MySharedPreferences.instance.removeValue('displayName');
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()));
+                      },
+                      child: Text(
+                        AppStrings.loginWithDiffAcc,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            decoration: TextDecoration.underline),
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: height * 0.02,
-                ),
-                Container(
-                  child: GestureDetector(
-                    onTap: () async {
-                      if (await _isBiometricAvailable()) {
-                        await _getListOfBiometricTypes();
-                        await _authenticateUser();
-                      }
-                    },
-                    child: Text(
-                      AppStrings.userTouchAndFaceId,
-                      style: TextStyle(color: Colors.white, fontSize: 20),
+                  SizedBox(
+                    height: height * 0.02,
+                  ),
+                  Container(
+                    child: GestureDetector(
+                      onTap: () async {
+                        if (await _isBiometricAvailable()) {
+                          await _getListOfBiometricTypes();
+                          await _authenticateUser();
+                        }
+                      },
+                      child: Text(
+                        AppStrings.userTouchAndFaceId,
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                Visibility(
-                    maintainSize: true,
-                    maintainAnimation: true,
-                    maintainState: true,
-                    visible: visible,
-                    child: Container(
-                        margin: EdgeInsets.only(top: 20, bottom: 0),
-                        child: CircularProgressIndicator())),
-              ]),
-              //_bottomAppBar,
-            ],
-          ),
+                  SizedBox(
+                    height: 25,
+                  ),
+                  Visibility(
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      visible: visible,
+                      child: Container(
+                          margin: EdgeInsets.only(top: 20, bottom: 0),
+                          child: CircularProgressIndicator())),
+                ]),
+                //_bottomAppBar,
+              ],
             ),
+          ),
         ),
       ),
-      ]
-    );
+    ]);
   }
 
   Widget _tabletDisplay() {
@@ -457,11 +423,7 @@ class PinPutViewState extends State<PinPutView> {
             // }
             if (state.isTrue == true) {
               Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Welcome(
-                        displayName: state.displayName.toString(),profilePic: state.displayPic,
-                      )));
+                  context, MaterialPageRoute(builder: (context) => Welcome()));
             } else {
               _showSnackBar();
               setState(() {
@@ -500,7 +462,7 @@ class PinPutViewState extends State<PinPutView> {
                     padding: const EdgeInsets.only(top: 0, bottom: 0),
                     child: Container(
                         height: height * 0.14,
-                       // width: width*0.25,
+                        // width: width*0.25,
                         child: Image.asset(AppImages.pinImage)),
                   ),
                   SizedBox(
@@ -548,7 +510,6 @@ class PinPutViewState extends State<PinPutView> {
                               visible = true;
                             });
                             // var MemberID =memberIdFunction();
-                            print("Verify Screen received id is ${widget.data}");
                             // print("Verify Screen received id is $MemberID");
                             BlocProvider.of<PinScreenBloc>(context)
                                 .add(PinScreenEvent(
@@ -617,4 +578,3 @@ class PinPutViewState extends State<PinPutView> {
     ]);
   }
 }
-

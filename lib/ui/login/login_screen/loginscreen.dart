@@ -89,7 +89,7 @@ class LoginState extends State<LoginScreen> {
         if (state.isTrue == true) {
           if (state.isPinAvailable == true) {
             Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => Welcome(displayName: state.displayName.toString(),profilePic: state.profileImg.toString(),)));
+                context, MaterialPageRoute(builder: (context) => Welcome()));
           } else {
             Navigator.pushReplacement(context, MaterialPageRoute(
                 builder: (context) => CreatePinScreen(data: state.memberId,)));

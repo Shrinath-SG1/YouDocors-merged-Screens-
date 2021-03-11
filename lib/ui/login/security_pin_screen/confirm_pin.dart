@@ -53,8 +53,6 @@ class PinPutViewState extends State<PinPutView> {
     //
     var StoredPin = widget.data1;
     var MemberId = widget.data2;
-    // var StoredPin = '3434';
-    // var MemberId = '1';
 
     void _showSnackBar(String msg) {
       final snackBar = SnackBar(
@@ -91,7 +89,6 @@ class PinPutViewState extends State<PinPutView> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => VerifyPinScreen(
-                          data1: MemberId,
                         )));
           } else {
             setState(() {
@@ -115,7 +112,7 @@ class PinPutViewState extends State<PinPutView> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => VerifyPinScreen(
-                          data1: MemberId,
+                          // data1: MemberId,
                         )));
           } else {
             setState(() {
