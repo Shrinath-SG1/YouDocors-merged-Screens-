@@ -15,7 +15,7 @@ void main() async {
       create: (context) => LoginBloc(ApiServices()),
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: login == "" ? SplashScreen() : VerifyPinScreen())));
+          home:  login == null || login == "" ? SplashScreen() : VerifyPinScreen(),)));
 }
 
 // AnimatedSplashScreen(
