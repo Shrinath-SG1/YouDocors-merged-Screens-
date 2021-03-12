@@ -345,9 +345,10 @@ class PinPutViewState extends State<PinPutView> {
                         print('Shared Preference Cleared');
                         SharedPreferences preferences =
                             await SharedPreferences.getInstance();
-                        await preferences.remove('login');
-                        MySharedPreferences.instance.removeValue('memberId');
-                        MySharedPreferences.instance.removeValue('displayName');
+                        await
+                        preferences.clear();                         ///updated
+                         MySharedPreferences.instance.removeAll();    ///updated
+                        // MySharedPreferences.instance.removeValue('displayName');
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -540,8 +541,8 @@ class PinPutViewState extends State<PinPutView> {
                       onTap: () async {
                         SharedPreferences preferences =
                             await SharedPreferences.getInstance();
-                        await preferences.remove('login');
-                        MySharedPreferences.instance.removeValue('memberId');
+                        await preferences.clear();                       ///Updated
+                        MySharedPreferences.instance.removeAll();        ///Updated
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(

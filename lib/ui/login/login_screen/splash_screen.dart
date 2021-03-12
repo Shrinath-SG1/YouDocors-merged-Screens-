@@ -65,8 +65,8 @@ class SplashScreen_State extends State<SplashScreen> {
           ],
         ),
       ),
-      width: width,
-      height: height,
+      // width: width,
+      // height: height,
     );
   }
 

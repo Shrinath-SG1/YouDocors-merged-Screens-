@@ -65,9 +65,8 @@ class _WelcomeState extends State<Welcome> {
         onPressed: () async {
           print('Shared Preference Cleared');
           SharedPreferences preferences = await SharedPreferences.getInstance();
-          await preferences.remove('login');
-          MySharedPreferences.instance.removeValue('memberId');
-          MySharedPreferences.instance.removeValue('displayName');
+          await preferences.clear();
+          MySharedPreferences.instance.removeAll();
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => LoginScreen()));
         },
