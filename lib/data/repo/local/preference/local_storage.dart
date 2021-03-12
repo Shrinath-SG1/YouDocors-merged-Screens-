@@ -36,4 +36,5 @@ class Keys {
   static const String memberId = 'memberId';
   static const String displayPic = 'displayPic';
   static const String displayName = 'displayName';
+  static const String isPINAvailable = 'isPINAvailable';
 }

@@ -30,22 +30,22 @@ class LoginState extends State<LoginScreen> {
   TextEditingController passwordController = TextEditingController();
 
   /// Shared Preference
-  SharedPreferences logindata;
-  SharedPreferences MemberIdData;
-  bool newuser;
+  // SharedPreferences logindata;
+  // SharedPreferences MemberIdData;
+  // bool newuser;
 
 
   /// Check if the user data is already exist or not
   // ignore: non_constant_identifier_names
-  void check_if_already_login() async {
-    logindata = await SharedPreferences.getInstance();
-    newuser = (logindata.getBool('login') ?? true);
-    print(newuser);
-    if (newuser == false) {
-      Navigator.pushReplacement(context,
-          new MaterialPageRoute(builder: (context) => VerifyPinScreen()));
-    }
-  }
+  // void check_if_already_login() async {
+  //   logindata = await SharedPreferences.getInstance();
+  //   newuser = (logindata.getBool('login') ?? true);
+  //   print(newuser);
+  //   if (newuser == false) {
+  //     Navigator.pushReplacement(context,
+  //         new MaterialPageRoute(builder: (context) => VerifyPinScreen()));
+  //   }
+  // }
 
   /// DialogBox to show the popup message if user credentials are wrong
   void _dialogBox() {
@@ -67,7 +67,7 @@ class LoginState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    check_if_already_login();
+   // check_if_already_login();
     _passwordvisible = false;
     super.initState();
   }
@@ -311,8 +311,8 @@ class LoginState extends State<LoginScreen> {
               setState(() {
                 visible = true;
               });
-              logindata.setBool('login', false);
-              logindata.setString('username', emailController.text);
+              // logindata.setBool('login', false);
+              // logindata.setString('username', emailController.text);
               print("This is Email ${emailController.text}");
               BlocProvider.of<LoginBloc>(context).add(FormScreenEvent(
                   emailController.text, passwordController.text));

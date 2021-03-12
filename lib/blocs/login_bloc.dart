@@ -37,6 +37,7 @@ class LoginBloc extends Bloc<FormScreenEvent, FormScreenState> {
           var MemberId = authenticateUser.memberRole[0].memberId.toString();
           var displayyName = authenticateUser.displayName;
           var profilePic = authenticateUser.profilePhoto;
+          var isPINAvailable=authenticateUser.memberPin;
           print(displayyName);
           print(profilePic);
 
@@ -52,6 +53,7 @@ class LoginBloc extends Bloc<FormScreenEvent, FormScreenState> {
            print("Profile Pic is $ProfilePic");
           var displayName=await MySharedPreferences.instance.setStringValue(Keys.displayName, displayyName);
           print("display name is  $displayName");
+          await MySharedPreferences.instance.setStringValue(Keys.isPINAvailable, isPINAvailable);
 
 
           if (authenticateUser.memberPin == "") {
